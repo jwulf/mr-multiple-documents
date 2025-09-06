@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi Document Upload Reproducer</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    form { border: 1px solid #ccc; padding: 1rem; border-radius: 4px; }
+    #result { margin-top: 1rem; white-space: pre; background: #f7f7f7; padding: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Upload Documents</h1>
+  <form id="uploadForm" enctype="multipart/form-data" method="POST" action="/upload">
+    <input type="file" name="documents" id="documents" multiple required />
+    <button type="submit">Submit</button>
+  </form>
+  <div id="result"></div>
+  <script>
+    const form = document.getElementById('uploadForm');
+    const resultDiv = document.getElementById('result');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: fd });
+        const json = await res.json();
+        resultDiv.textContent = JSON.stringify(json, null, 2);
+      } catch (err) {
+        resultDiv.textContent = 'Error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
