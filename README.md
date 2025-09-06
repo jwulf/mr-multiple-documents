@@ -23,11 +23,11 @@ npm start
 Open http://localhost:3000 and select one or more files, then submit. The server will:
 
 1. Receive the multipart form.
-2. Convert each file to `{ filename, contentType, buffer }`.
-3. Call `rest.uploadDocuments({ documents })`.
-4. Return JSON with the filenames and raw Camunda response.
+2. Convert each file buffer into an in-memory `Readable` stream and attach a `path` property set to the original filename so `form-data` preserves it.
+3. Call `rest.uploadDocuments({ files: streams })`.
+4. Return JSON with the filenames and the raw Camunda response.
 
-If env vars are missing, the first upload attempt returns a 500 with a helpful message (server still starts even if not configured yet).
+If env vars are missing, the first upload attempt returns a 500 with a helpful message (server still starts even if not configured yet). The filename metadata is preserved without writing to disk; content type is inferred from the filename extension.
 
 ## Notes
 
